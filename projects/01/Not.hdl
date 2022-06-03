@@ -8,10 +8,13 @@
  * out = not in
  */
 
+/*
+Nand(a= ,b= ,out= ) //true on everything but (1,1) -> false
+*/
 CHIP Not {
     IN in;
     OUT out;
 
     PARTS:
-    // Put your code here:
+    Nand(a=in, b=in, out= out);
 }
