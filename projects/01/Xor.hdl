@@ -13,5 +13,9 @@ CHIP Xor {
     OUT out;
 
     PARTS:
-    // Put your code here:
+    And(a=a, b=b, out=and); //one side of OR
+    Or(a=a, b=b, out=or); //opposite of what we want
+    Not(in=or, out=notor); //second side of OR
+    Or(a=and, b=notor, out=finalOr);
+    Not(in=finalOr, out=out);
 }
