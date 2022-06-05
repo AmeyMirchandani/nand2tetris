@@ -39,3 +39,11 @@ I took this one in steps, using the AND gate to return true for all 1,1 inputs, 
 `Or(a=band, b=aand, out=out);`
 
 Had to check online for this one, I thought that it was likely that you had to somehow compare each MUX input with the selector input, but wasn't sure how. I knew that if you AND a value with 1, you get that value, so if I used b for that value, I could pass it on, whereas if I did the opposite for a, using 0 as one of the inputs, it would automatically output 0. Using this logic, I would need to invert the selector to provide the ability to pass its value, and its opposite each to separate gates. b was put in the AND gate recieving the selector value, as if it was 1, I wanted to pass on b, and negate a by returning 0. I would then later need to compare the values using OR, as one of then would definitely be 0 (from the gate getting the 0 selector input), and pass on the value of the selected pin.
+
+### DMux
+>The selector input is inverted with a NOT gate. Two AND gates are set up, both of which take the input as one argument; One of them takes the selector input and the other takes the negation, the one that takes the negation has an output to "a" and the non-negated one goes to the "b" output for DMux.\
+`Not(in=sel, out=notsel);`\
+`And(a=sel, b=in, out=b); //b output gate`\
+`And(a=notsel, b=in, out=a); //a output gate`
+
+After having done the Mux gate, this one was a bit easier, as I better knew how to structure the logic for using AND gates to pass along values that I want and filter out those that I don't. I just needed to be able to change my "filter" variable (sel), which in this case I inverted, to be able to plug both 0 and 1 into two AND gates, both taking the input for Dmux, which resulted in giving me the value of the variable with 1 for sel plugged in, and 0 for the one with 0 for sel plugged in. I could just then pass them on directly.
