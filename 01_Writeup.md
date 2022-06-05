@@ -30,3 +30,12 @@ This was similar to And, in that you negate the inputs *before* they go into the
 `Not(in=finalOr, out=out);`
 
 I took this one in steps, using the AND gate to return true for all 1,1 inputs, and the OR gate, combined with a NOT to return true for all 0,0 inputs. If I send both outputs through an OR gate and it returned true, then the set of inputs was either 1,1 or 0,0. I needed it to be the opposite, (true when it was either 0,1 or 1,0), so I sent it through another NOT gate.
+
+### Mux
+>The selector input is inverted with a NOT gate. Both inputs are sent to separate AND gates, where the second input for one AND gate is the selector input and the second input for the other is the inverted selector input. Both outputs for the AND gates feed into an OR gate, the output of which goes to the output of the MUX gate.\
+`Not(in=sel, out=notsel);`\
+`And(a=sel, b=b, out=band);`\
+`And(a=notsel, b=a, out=aand);`\
+`Or(a=band, b=aand, out=out);`
+
+Had to check online for this one, I thought that it was likely that you had to somehow compare each MUX input with the selector input, but wasn't sure how. I knew that if you AND a value with 1, you get that value, so if I used b for that value, I could pass it on, whereas if I did the opposite for a, using 0 as one of the inputs, it would automatically output 0. Using this logic, I would need to invert the selector to provide the ability to pass its value, and its opposite each to separate gates. b was put in the AND gate recieving the selector value, as if it was 1, I wanted to pass on b, and negate a by returning 0. I would then later need to compare the values using OR, as one of then would definitely be 0 (from the gate getting the 0 selector input), and pass on the value of the selected pin.
