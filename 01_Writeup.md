@@ -131,3 +131,15 @@ Exact same as And16, but with OR gates instead.
 `Mux(a=a[15], b=b[15], sel=sel, out=out[15]);`
 
 This was just a variation of the 16 bit bus problems done before.
+
+### Or8Way
+>The first OR gate takes the first and second bit from the input bus and sends the output to another OR gate that takes the third input from the input bus, etc... till you process the eighth input from the input bus, and then send the result to the output of the Or8Way gate.\
+`Or(a=in[0], b=in[1], out=r1);`\
+`Or(a=r1, b=in[2], out=r2);`\
+`Or(a=r2, b=in[3], out=r3);`\
+`Or(a=r3, b=in[4], out=r4);`\
+`Or(a=r4, b=in[5], out=r5);`\
+`Or(a=r5, b=in[6], out=r6);`\
+`Or(a=r6, b=in[7], out=out);`
+
+This was just a matter of chaining OR gates together. Not too bad because if you hit a 1, it carried over till the end.
