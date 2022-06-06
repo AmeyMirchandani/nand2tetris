@@ -159,3 +159,11 @@ This was essentially just a composition of multiple Mux16 gates, we choose one b
 `Mux16(a=r1, b=r2, sel=sel[2], out=out);`
 
 This was very similar to the Mux4Way16 implementation, as I just used 2 4Way gates instead of the regular 2 way that Mux16 deal with. The Mux4Way16 let me deal with the right 2 digits of the selection number, and the last Mux16 let me deal with the last one on the left.
+
+### DMux4Way
+>Input is fed into a Dmux gate, with the selection pin being the first bit of sel (rightmost 0 or 1). The first output represents a and c (0 as rightmost bit), and the second represents b and d (1 as rightmost bit). Each output is then fed into another Dmux gate, which takes the second bit of sel (leftmost 0 or 1), the first gate chooses between a and c, the second between b and d.\
+`DMux(in=in, sel=sel[0], a=r1, b=r2);`\
+`DMux(in=r1, sel=sel[1], a=a, b=c);`\
+`DMux(in=r2, sel=sel[1], a=b, b=d);`
+
+This one took a bit, but once I figured out that I am just choosing like a Dmux gate, but in parts, it became easy to see that I could just choose first 0 or 1 for right bit, and then choose between 0 or 1 for left bit, the output for the right bit I don't choose will always be 0, so I don't have to worry about checking the left bit messing with anything.
