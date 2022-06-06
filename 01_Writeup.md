@@ -151,3 +151,11 @@ This was just a matter of chaining OR gates together. Not too bad because if you
 `Mux16(a=r1, b=r2, sel=sel[1], out=out);`
 
 This was essentially just a composition of multiple Mux16 gates, we choose one bus that could be chosen for each gate on the rightmost selection bit being a 0, and one bus for it being a 1. Once you do this, both gates will either output a bus for selection bit 0 or both will output one for selection bit 1 (not different). Once you have the rightmost bit the same for both busses, you do the same for the leftmost bit, passing the remaining busses into a final Mux16 gate. This will get you the gate with the correct leftmost bit as well.
+
+### Mux8Way16
+>The first 4 input busses are passed to a Mux4Way16 gate, and depending on the rightmost 2 bits of the selection number, it picks one of the 4 busses and outputs it. This is done another time for the other 4 busses with another Mux4Way16 gate. The outputs of these 2 Mux4Way16 gates are put into the input of a Mux16 gate, which evaluates the leftmost bit of the selection number (third bit), on it being 0, returns the first bus, and on a 1, returns the second bus.\
+`Mux4Way16(a=a, b=b, c=c, d=d, sel=sel[0..1], out=r1);`\
+`Mux4Way16(a=e, b=f, c=g, d=h, sel=sel[0..1], out=r2);`\
+`Mux16(a=r1, b=r2, sel=sel[2], out=out);`
+
+This was very similar to the Mux4Way16 implementation, as I just used 2 4Way gates instead of the regular 2 way that Mux16 deal with. The Mux4Way16 let me deal with the right 2 digits of the selection number, and the last Mux16 let me deal with the last one on the left.
