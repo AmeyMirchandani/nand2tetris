@@ -143,3 +143,11 @@ This was just a variation of the 16 bit bus problems done before.
 `Or(a=r6, b=in[7], out=out);`
 
 This was just a matter of chaining OR gates together. Not too bad because if you hit a 1, it carried over till the end.
+
+### Mux4Way16
+>The first 2 input busses are passed to a Mux16 gate, and on the rightmost bit of the selection number being 0, it returns the first bus, and on 1, it returns the second. This is also done for the third and fourth bus with a second Mux16 gate. The outputs of these 2 Mux16 gates are put into the input of a third Mux16, which evaluates the leftmost bit of the selection number, on it being 0, returns the first bus, and on a 1, returns the second bus.\
+`Mux16(a=a, b=b, sel=sel[0], out=r1);`\
+`Mux16(a=c, b=d, sel=sel[0], out=r2);`\
+`Mux16(a=r1, b=r2, sel=sel[1], out=out);`
+
+This was essentially just a composition of multiple Mux16 gates, we choose one bus that could be chosen for each gate on the rightmost selection bit being a 0, and one bus for it being a 1. Once you do this, both gates will either output a bus for selection bit 0 or both will output one for selection bit 1 (not different). Once you have the rightmost bit the same for both busses, you do the same for the leftmost bit, passing the remaining busses into a final Mux16 gate. This will get you the gate with the correct leftmost bit as well.
