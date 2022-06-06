@@ -47,3 +47,24 @@ Had to check online for this one, I thought that it was likely that you had to s
 `And(a=notsel, b=in, out=a); //a output gate`
 
 After having done the Mux gate, this one was a bit easier, as I better knew how to structure the logic for using AND gates to pass along values that I want and filter out those that I don't. I just needed to be able to change my "filter" variable (sel), which in this case I inverted, to be able to plug both 0 and 1 into two AND gates, both taking the input for Dmux, which resulted in giving me the value of the variable with 1 for sel plugged in, and 0 for the one with 0 for sel plugged in. I could just then pass them on directly.
+
+### Not16
+>16 NOT gates each take a bit from the input bus and output it to a bit in the output bus.\
+`Not(in=in[0], out=out[0]);`\
+`Not(in=in[1], out=out[1]);`\
+`Not(in=in[2], out=out[2]);`\
+`Not(in=in[3], out=out[3]);`\
+`Not(in=in[4], out=out[4]);`\
+`Not(in=in[5], out=out[5]);`\
+`Not(in=in[6], out=out[6]);`\
+`Not(in=in[7], out=out[7]);`\
+`Not(in=in[8], out=out[8]);`\
+`Not(in=in[9], out=out[9]);`\
+`Not(in=in[10], out=out[10]);`\
+`Not(in=in[11], out=out[11]);`\
+`Not(in=in[12], out=out[12]);`\
+`Not(in=in[13], out=out[13]);`\
+`Not(in=in[14], out=out[14]);`\
+`Not(in=in[15], out=out[15]);`
+
+Fairly simple for this one, just apply the NOT gate for each bit in the 16 bit bus.
