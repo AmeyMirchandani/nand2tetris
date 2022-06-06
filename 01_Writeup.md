@@ -167,3 +167,13 @@ This was very similar to the Mux4Way16 implementation, as I just used 2 4Way gat
 `DMux(in=r2, sel=sel[1], a=b, b=d);`
 
 This one took a bit, but once I figured out that I am just choosing like a Dmux gate, but in parts, it became easy to see that I could just choose first 0 or 1 for right bit, and then choose between 0 or 1 for left bit, the output for the right bit I don't choose will always be 0, so I don't have to worry about checking the left bit messing with anything.
+
+### DMux8Way
+>Input is fed into a Dmux4Way gate, with the selection pin being the first two bits of sel (rightmost 2 bits). The first output represents a and e (00 as rightmost bits), and the second represents b and f (01 as rightmost bits), the third is cg (10 as rightmost bits), and the fourth is dh (11 as rightmost bits). Each output is then fed into another Dmux gate, which takes the last bit of sel (leftmost 0 or 1), the first gate chooses between a and e, the second between b and f, the third between c and g, and the fourth between d and h.\
+`DMux4Way(in=in, sel=sel[0..1], a=ae, b=bf, c=cg, d=dh);`\
+`DMux(in=ae, sel=sel[2], a=a, b=e);`\
+`DMux(in=bf, sel=sel[2], a=b, b=f);`\
+`DMux(in=cg, sel=sel[2], a=c, b=g);`\
+`DMux(in=dh, sel=sel[2], a=d, b=h);`
+
+Similarly to the DMux4Way gate, we have to split the input into outputs that each represent 2 of the final outputs. Each of these 4 are then split into single outputs, connecting to the outputs of the DMux8Way gate. Almost the same as DMux4Way, where you have to split 2 outputs into 4 as opposed to 4 into 8 as we do here.
