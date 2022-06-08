@@ -10,9 +10,30 @@
 The XOR gate mirrors how you do bitwise addition for the sum, and the AND gate mirrors it for the carry.
 
 ### Full-Adder
->2 inputs go into the inputs of a HalfAdder gate, the output sum of which is used as the input of another HalfAdder gate along with the final input of the FullAdder as the other input. The sum of the second HalfAdder gate is sent to the sum output of the FullAdder, while the carry output is sent to an OR gate, where it is compared to the first HalfAdder gate's carry output, the output of this gate is used as the carry output for the FullAdder gate.
-`HalfAdder(a=a, b=b, sum=midsum, carry=midcarry);`
-`HalfAdder(a=midsum, b=c, sum=sum, carry=finalcarry);`
+>2 inputs go into the inputs of a HalfAdder gate, the output sum of which is used as the input of another HalfAdder gate along with the final input of the FullAdder as the other input. The sum of the second HalfAdder gate is sent to the sum output of the FullAdder, while the carry output is sent to an OR gate, where it is compared to the first HalfAdder gate's carry output, the output of this gate is used as the carry output for the FullAdder gate.\
+`HalfAdder(a=a, b=b, sum=midsum, carry=midcarry);`\
+`HalfAdder(a=midsum, b=c, sum=sum, carry=finalcarry);`\
 `Or(a=midcarry, b=finalcarry, out=carry);`
 
 What's important to realize here is that when you add 2 bits, you can take the sum and then add it to another bit. This result is the final sum no matter what. At the point, the carry that you originally recorded when adding the first 2 bits will either be 0 or 1. If it is 0, then the second carry can either be 0 or 1, if it is 1, the second carry will be 0. Because of this, it cannot break anything, and can be used as the final carry.
+
+### Add16
+>Starting with a HalfAdder, the first 2 bits of each 16 bit bus are inputted and the sum is sent to the first bit of the outpus bus, while the carry is used for the next FullAdder chip along with the next 2 bits from the input busses. The sum is sent to the next bit of the output bus, and the carry is used as the third input for the next FullAdder bus. This continues for all bits of the 16 bit input bus.\
+`HalfAdder(a=a[0], b=b[0], sum=out[0], carry=c1);`\
+`FullAdder(a=a[1], b=b[1], c=c1, sum=out[1], carry=c2);`\
+`FullAdder(a=a[2], b=b[2], c=c2, sum=out[2], carry=c3);`\
+`FullAdder(a=a[3], b=b[3], c=c3, sum=out[3], carry=c4);`\
+`FullAdder(a=a[4], b=b[4], c=c4, sum=out[4], carry=c5);`\
+`FullAdder(a=a[5], b=b[5], c=c5, sum=out[5], carry=c6);`\
+`FullAdder(a=a[6], b=b[6], c=c6, sum=out[6], carry=c7);`\
+`FullAdder(a=a[7], b=b[7], c=c7, sum=out[7], carry=c8);`\
+`FullAdder(a=a[8], b=b[8], c=c8, sum=out[8], carry=c9);`\
+`FullAdder(a=a[9], b=b[9], c=c9, sum=out[9], carry=c10);`\
+`FullAdder(a=a[10], b=b[10], c=c10, sum=out[10], carry=c11);`\
+`FullAdder(a=a[11], b=b[11], c=c11, sum=out[11], carry=c12);`\
+`FullAdder(a=a[12], b=b[12], c=c12, sum=out[12], carry=c13);`\
+`FullAdder(a=a[13], b=b[13], c=c13, sum=out[13], carry=c14);`\
+`FullAdder(a=a[14], b=b[14], c=c14, sum=out[14], carry=c15);`\
+`FullAdder(a=a[15], b=b[15], c=c15, sum=out[15], carry=c16);`
+
+This wasn't too bad, as long as I made sure not to miss the fact that the initial input had 2 actual bits and not 3, and so used a HalfAdder instead of a FullAdder, it works. This is basically the same as if you were doing bitwise addition on a piece of paper, just this time in a HDL.
