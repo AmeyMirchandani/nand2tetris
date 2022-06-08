@@ -37,3 +37,9 @@ What's important to realize here is that when you add 2 bits, you can take the s
 `FullAdder(a=a[15], b=b[15], c=c15, sum=out[15], carry=c16);`
 
 This wasn't too bad, as long as I made sure not to miss the fact that the initial input had 2 actual bits and not 3, and so used a HalfAdder instead of a FullAdder, it works. This is basically the same as if you were doing bitwise addition on a piece of paper, just this time in a HDL.
+
+### Inc16 (Increment 16 bit)
+>The input of the Inc16 gate goes into the first pin of an Add16 chip, the second input is the 16 bit bus containing a 1 in the least significant bit, and 0s eleswhere.\
+`Add16(a=in, b[0]=true, out=out);`
+
+This one took some review of the actual rules for the HDL defined in the book, but once I realized that you can directly set bits in a bus to true(1) or false(0), and that the other unspecified bits are automatically set to 0 by default, I can directly pass the input that I wanted (1 in binary) to be added to the input.
