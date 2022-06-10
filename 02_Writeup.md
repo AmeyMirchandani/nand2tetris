@@ -43,3 +43,33 @@ This wasn't too bad, as long as I made sure not to miss the fact that the initia
 `Add16(a=in, b[0]=true, out=out);`
 
 This one took some review of the actual rules for the HDL defined in the book, but once I realized that you can directly set bits in a bus to true(1) or false(0), and that the other unspecified bits are automatically set to 0 by default, I can directly pass the input that I wanted (1 in binary) to be added to the input.
+
+### ALU
+>x is conditionally zeroed by passing a zeroed version and the non-zeroed version through a Mux16 gate, and allowing "zx" to choose between them. x is then inverted by passing the "notted" version and the unchanged version (after it's been through the zeroing process) into a Mux16 gate and allowing "nx" to choose between them. The same logic is followed for the other input, y, as well as for negating the output with "no". Adding or ANDing is done by using a Mux16 gate and allowing "f" to choose between an ANDed version of x and y, or x + y. The final number is checked to see if it is zero by splitting it in 2 8 bit busses and passing each half to an Or8Way, getting 2 outputs, then ORring them together. The negative is checked by retrieving the highest order bit from the output, and seeing if it's 1, if it is, then the number is negative.\
+`And16(a=x, b[0..15]=false, out=zerx);`\
+`Mux16(a=x, b=zerx, sel=zx, out=x1); //x1`\
+`//nx`\
+`Not16(in=x1, out=notx);`\
+`Mux16(a=x1, b=notx, sel=nx, out=x2); //x2 <--`\
+`//zy`\
+`And16(a=y, b[0..15]=false, out=zery);`\
+`Mux16(a=y, b=zery, sel=zy, out=y1); //y1`\
+`//ny`\
+`Not16(in=y1, out=noty);`\
+`Mux16(a=y1, b=noty, sel=ny, out=y2); //y2 <--`\
+`//f`\
+`And16(a=x2, b=y2, out=andxy);`\
+`Add16(a=x2, b=y2, out=addxy);`\
+`Mux16(a=andxy, b=addxy, sel=f, out=compxy); //compxy <--`\
+`//no`\
+`Not16(in=compxy, out=nego); //nego`\
+`Mux16(a=compxy, b=nego, sel=no, out=out, out[0..7]=olow, out[8..15]=ohigh, out[15]=osign); //olow, ohigh, osign <--`\
+`//zr`\
+`Or8Way(in=olow, out=leftzr); //leftzr`\
+`Or8Way(in=ohigh, out=rightzr); //rightzr`\
+`Or(a=leftzr, b=rightzr, out=nonnegzr);`\
+`Not(in=nonnegzr, out=zr); //zr <--`\
+`//ng`\
+`And(a=osign, b=true, out=ng);//ng <--`
+
+This one was also fairly tough initially to think about, but once I figured that you can just pass the two versions of the output you want to choose between to a Mux16 gate, and allow the choice flag to choose through that, then use the output of that as the modified number, it was fairly simple to go through the rest. Learning how to properly format outpus busses was important for this, as doing something like: out[bus_size]=output_pin_name was extremely useful in shaving down output bus sizes to fit certain gates; for example, Or8Way would not be useable if I didn't use the previously mentioned feature of the HDL to split the bus bits into 2 busses with 8 bits each.
