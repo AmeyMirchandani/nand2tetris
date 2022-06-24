@@ -39,5 +39,30 @@ CHIP CPU {
         pc[15];          // address of next instruction
 
     PARTS:
-    // Put your code here:
+    And(a=instruction[15], b=instruction[5], out=takeALUout); //if C instruction AND destination includes A register
+    Mux16(a=instruction, b=ALUout, sel=takeALUout, out=Ainput);
+
+    Not(in=instruction[15], out=Ains); //A instruction
+    Or(a=takeALUout, b=Ains, out=loadA); //if C instruction AND destination includes A register |OR| A instruction
+    ARegister(in=Ainput, load=loadA, out=Aout);
+    And16(a=true, b=Aout, out[0..14]=addressM); //resize A register output to go in addresssM output for CPU chip
+
+    Mux16(a=Aout, b=inM, sel=instruction[12], out=AMtoALU); //choose between A and M
+    ALU(x=AMtoALU, y=DtoALU, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8], f=instruction[7], no=instruction[6], out=outM, out=ALUout, zr=ZRout, ng=NGout);
+
+    And(a=ZRout, b=instruction[1], out=jmpEQ); //output is == 0 AND jeq == true <--
+    And(a=NGout, b=instruction[2], out=jmpLT); //output is < 0 AND jlt == true <--
+    Or(a=jmpEQ, b=jmpLT, out=EQorLT); //output is either == 0 OR < 0
+    Not(in=EQorLT, out=pos); //output is positive (not == 0 AND not < 0) (Demorgan's Rule)
+    And(a=pos, b=instruction[0], out=jmpGT); //output is > 0 AND jgt == true <--
+    Or(a=EQorLT, b=jmpGT, out=EQorLTorGT); //output is == 0 OR < 0 OR > 0
+    
+    And(a=instruction[15], b=EQorLTorGT, out=loadPC); //load PC if C instruction AND output is == 0 OR < 0 OR > 0, also the jump bits have to be set
+    Not(in=loadPC, out=notLoad); //increment PC when not loading
+    PC(in=Aout, load=loadPC, inc=notLoad, reset=reset, out[0..14]=pc);
+
+    And(a=instruction[15], b=instruction[4], out=loadD); //if C instruction AND destination includes D register
+    DRegister(in=ALUout, load=loadD, out=DtoALU);
+
+    And(a=instruction[15], b=instruction[3], out=writeM); // <-- writeM
 }
