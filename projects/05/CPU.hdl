@@ -64,5 +64,5 @@ CHIP CPU {
     And(a=instruction[15], b=instruction[4], out=loadD); //if C instruction AND destination includes D register
     DRegister(in=ALUout, load=loadD, out=DtoALU);
 
-    And(a=instruction[15], b=instruction[3], out=writeM); // <-- writeM
+    And(a=instruction[15], b=instruction[3], out=writeM); // <-- writeM //if C instruction AND destination includes M register
 }
