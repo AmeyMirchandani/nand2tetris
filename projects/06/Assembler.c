@@ -38,7 +38,8 @@ int main(int argc, char** argv)
     char line[60];
     while(fgets(line, sizeof(line), inputFile) != NULL)
     {
-
+        if(line[strlen(line)-1] == '\n')
+            line[strlen(line)-1] = 0;
     }
 
     fclose(inputFile);
