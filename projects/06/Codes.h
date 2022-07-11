@@ -15,21 +15,6 @@ void aInsSetup(char* line)
 
 void getBinaryStringFromInt(char* line, int num)
 {
-    /*
-    line[17] = 0; //set NUL byte
-
-    int i = 16;
-    while(num > 0)
-    {
-        line[i] = num % 2;
-        i++;
-        num /= 2;
-    }
-    while(i > 0)
-    {
-        line[i] = '0';
-    }
-    */
    char convertedInt[16]; //up to 15 bytes long
    itoa(num, convertedInt, 2);
 
