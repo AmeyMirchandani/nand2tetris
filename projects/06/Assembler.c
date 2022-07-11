@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "Codes.h"
+#include "LinkedList.h"
 
 #define true 1
 #define false 0
@@ -41,10 +42,16 @@ int main(int argc, char** argv)
     else
         printf("Succesfully opened output file\n");
 
+
+    LinkedList* symbolTable = initializeDefaultAddresses();
+
+    // SECOND PASS
     char line[100]; //line that is read in
+    //int varAddress = 16; //keeps track of insertion location for variables
+    
     while(fgets(line, sizeof(line), inputFile) != NULL) //read lines
     {
-        if(line[0] == '/' || line[0] == '\n') //if first char is a / or a newline, skip line
+        if(line[0] == '/' || line[0] == '\n' || line[0] == '(') //if first char is a / or ( or a newline(\n), skip line
             {
                 printf("// or newline\n");
                 continue;
@@ -81,13 +88,13 @@ int main(int argc, char** argv)
         else
         {
             aInsSetup(outputLine); //setup for A Instruction
-            if(isdigit(line[1])) //no symbol
+            if(isdigit(line[1])) // no symbol
             {
-                getBinaryStringFromInt(outputLine, atoi(&line[1]));
+                getBinaryStringFromInt(outputLine, atoi(&line[1])); //start after @
             }
-            else
+            else // symbol
             {
-
+                
             }
         }
 
@@ -95,6 +102,7 @@ int main(int argc, char** argv)
         fputs("\n", outputFile);
     }
 
+    freeList(symbolTable);
     fclose(inputFile);
     fclose(outputFile);
 }
