@@ -1,3 +1,6 @@
+#ifndef LINKEDLIST_H
+#define LINKEDLIST_H
+
 struct LinkedList
 {
     char name[30];
@@ -48,6 +51,16 @@ void freeList(LinkedList* list)
     }
 }
 
+void printList(LinkedList* list)
+{
+    LinkedList* currentNode = list;
+    while(currentNode != NULL)
+    {
+        printf("Name: %s, Address: %d\n", currentNode->name, currentNode->address);
+        currentNode = currentNode->next;
+    }
+}
+
 LinkedList* initializeDefaultAddresses()
 {
     LinkedList* list = createNode("SP", 0);
@@ -70,8 +83,10 @@ LinkedList* initializeDefaultAddresses()
     list = addNode(list, "R12", 12);
     list = addNode(list, "R13", 13);
     list = addNode(list, "R14", 14);
-    list = addNode(list, "R15", 015);
+    list = addNode(list, "R15", 15);
     list = addNode(list, "SCREEN", 16384);
     list = addNode(list, "KBD", 24576);
     return list;
 }
+
+#endif

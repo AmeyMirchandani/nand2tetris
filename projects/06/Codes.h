@@ -3,6 +3,13 @@
 #include <string.h>
 #include <ctype.h>
 
+char* removeStartSpaces(char* line)
+{
+    while(*line == ' ')
+        line++;
+    return line;
+}
+
 void cInsSetup(char* line)
 {
     strcpy(line, "111");
@@ -19,14 +26,23 @@ void getBinaryStringFromInt(char* line, int num)
    itoa(num, convertedInt, 2);
 
    char newline[16]; //15 bytes long
+
    for(int i = 0; i < 15 - strlen(convertedInt); i++)
    {
         newline[i] = '0';
         newline[i+1] = 0;
    } 
 
-   strcat(newline, convertedInt);
-   strcat(line, newline);
+   if((15 - strlen(convertedInt)) == 0) //if do not need to pad with 0s
+   {
+        strcat(line, convertedInt);
+   }
+   else //if padded with 0s
+   {
+        strcat(newline, convertedInt);
+        strcat(line, newline);
+   }
+
 }
 
 void addDest(char* line, char* code)
