@@ -24,19 +24,26 @@ int main(int argc, char** argv)
     FILE* outputFile;
     int done = false;
 
-    if(isPath && ((FD = opendir(argv[1])) == NULL)) //open directory
+    if(isPath && ((FD = opendir(argv[1])) == NULL)) //OPEN DIRECTORY
     {
         printf("Could not open directory: %s\n", argv[1]);
         exit(1);
     }
 
     //OPEN OUTPUT FILE
-    char* outputFileName;
-    strcpy(outputFile, argv[1]);
+    char initialName[100];
+    strcpy(initialName, argv[1]); //copy input to initialName
+    char* outputFileName = initialName; //final name for outputFile
     if(isPath) //if input was a filepath, get the name of the final folder
     {
         outputFileName = getDirName(outputFileName);
     }
+    else //if input was just a filename, cut off the .vm part
+    {
+        outputFileName = strtok(outputFileName, ".");
+    }
+    outputFileName = strcat(outputFileName, ".asm"); //add .asm extension
+
     if((outputFile = fopen(outputFileName, "w")) == NULL)
     {
         printf("Could not open output file: %s\n", outputFileName);
@@ -47,8 +54,7 @@ int main(int argc, char** argv)
 
     while(!done) //for each FILE
     {
-        char* filename; //name of file to open
-        strcpy(filename, argv[1]);
+        char* filename = argv[1]; //name of file to open
         if(isPath) //is a file path
         {
             if((inStruct = readdir(FD)) == NULL) //get next file in directory
@@ -70,9 +76,13 @@ int main(int argc, char** argv)
             exit(1);
         }
         //PROCESS FILE
-        
+        printf("Filename: %s\n", filename);
 
         if(!isPath) //finish after first file if it is not a directory
             done = true;
+        
+        fclose(inputFile);
     }
+    closedir(FD);
+    fclose(outputFile);
 }
