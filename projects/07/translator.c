@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <strings.h>
 #include <dirent.h>
+#include <unistd.h>
 #include "util.h"
 
 #define true 1
@@ -29,6 +30,8 @@ int main(int argc, char** argv)
         printf("Could not open directory: %s\n", argv[1]);
         exit(1);
     }
+    else
+        chdir(argv[1]);
 
     //OPEN OUTPUT FILE
     char initialName[100];
@@ -58,11 +61,8 @@ int main(int argc, char** argv)
         if(isPath) //is a file path
         {
             if((inStruct = readdir(FD)) == NULL) //get next file in directory
-            {
-                closedir(FD); //no files left in directory
-                fclose(outputFile);
-                exit(1);
-            }
+                break; //no files left to read in directory
+
             if(strstr(inStruct->d_name, ".vm") == NULL) //skip file if it does not have the .vm extension
                 continue;
             filename = inStruct->d_name;
@@ -76,13 +76,15 @@ int main(int argc, char** argv)
             exit(1);
         }
         //PROCESS FILE
-        printf("Filename: %s\n", filename);
+        processFile(inputFile);
+
 
         if(!isPath) //finish after first file if it is not a directory
             done = true;
         
         fclose(inputFile);
     }
-    closedir(FD);
+    if(isPath)
+        closedir(FD);
     fclose(outputFile);
 }
