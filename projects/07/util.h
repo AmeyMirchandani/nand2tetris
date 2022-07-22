@@ -1,4 +1,5 @@
 #define ADD_TEXT "@SP\nA=A-1\nD=M\nA=A-1\nD=D+M\nM=D\nA=A+1\n"
+#define SUB_TEXT "@SP\nA=A-1\nD=M\nA=A-1\nD=M-D\nM=D\nA=A+1\n"
 
 char* getDirName(char* directory) //modifies input string and returns pointer to a character in it
 {
@@ -20,6 +21,11 @@ void add(FILE* file)
     fputs(ADD_TEXT, file);
 }
 
+void sub(FILE* file)
+{
+    fputs(SUB_TEXT, file);
+}
+
 void processFile(FILE* file)
 {
     char line[100]; //line to read in input
@@ -33,6 +39,11 @@ void processFile(FILE* file)
         if(strcmp(first, "add") == 0) // add
         {
             add(file); //put assembly commands to add 2 numbers from stack into output file
+            continue;
+        }
+        if(strcmp(first, "sub") == 0) // subtract
+        {
+            sub(file);
             continue;
         }
     }
