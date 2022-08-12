@@ -78,7 +78,6 @@ int main(int argc, char** argv)
         //PROCESS FILE
         //processFile(inputFile);
 
-
         if(!isPath) //finish after first file if it is not a directory
             done = true;
         
