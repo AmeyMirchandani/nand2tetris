@@ -1,12 +1,12 @@
+#define true 1
+#define false 0
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <strings.h>
 #include <dirent.h>
 #include <unistd.h>
 #include "util.h"
-
-#define true 1
-#define false 0
 
 int main(int argc, char** argv)
 {
@@ -24,6 +24,7 @@ int main(int argc, char** argv)
     FILE* inputFile; //inputfile file descriptor
     FILE* outputFile;
     int done = false;
+    int boolNum = 0;
 
     if(isPath && ((FD = opendir(argv[1])) == NULL)) //OPEN DIRECTORY
     {
@@ -76,7 +77,7 @@ int main(int argc, char** argv)
             exit(1);
         }
         //PROCESS FILE
-        //processFile(inputFile);
+        //processFile(inputFile, &boolNum);
 
         if(!isPath) //finish after first file if it is not a directory
             done = true;

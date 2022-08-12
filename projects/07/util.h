@@ -1,5 +1,3 @@
-#define SUB_TEXT "@SP\nA=A-1\nD=M\nA=A-1\nD=M-D\nM=D\nA=A+1\n"
-
 char* getDirName(char* directory) //modifies input string and returns pointer to a character in it
 {
     char* prev;
@@ -107,7 +105,7 @@ void or(FILE* file)
 
 void not(FILE* file)
 {
-    //get 1st nun and put NOTed version on stack
+    //get 1st num and put NOTed version on stack
     decSP(file);
     A_toStackLoc(file);
     fputs("M=!M\n", file);
@@ -116,7 +114,56 @@ void not(FILE* file)
     incSP(file);
 }
 
-void processFile(FILE* file)
+void eq(FILE* file, int* boolNum)
+{
+    //subtract last 2 nums on stack
+    sub(file);
+
+    //copy top of stack to D
+    decSP(file);
+    A_toStackLoc(file);
+    fputs("D=M\n", file);
+
+    //write JEQ instruction -- STACK STILL DECREMENTED
+    char instruction[50];
+
+    //@BOOL_boolNum
+    sprintf(instruction, "@BOOL_%d\n", boolNum);
+    fputs(instruction, file);
+
+    //JEQ
+    fputs("D;JEQ\n", file);
+
+    //put 0 on stack
+    A_toStackLoc(file);
+    fputs("M=0\n", file);
+
+    //@ENDBOOL_boolNum
+    sprintf(instruction, "@ENDBOOL_%d\n", boolNum);
+    fputs(instruction, file);
+
+    //Jump to end of sequence
+    fputs("0;JMP\n", file);
+
+    //(BOOL_boolNum)
+    sprintf(instruction, "(BOOL_%d)\n", boolNum);
+    fputs(instruction, file);
+
+    //put -1 on stack
+    A_toStackLoc(file);
+    fputs("M=-1\n", file);
+
+    //(ENDBOOL_boolNum)
+    sprintf(instruction, "(ENDBOOL_%d)\n", boolNum);
+    fputs(instruction, file);
+
+    //inc sp
+    incSP(file);
+
+    (*boolNum)++; //increment boolNum
+}
+
+void processFile(FILE* file, int* boolNum)
 {
     char line[100]; //line to read in input
 
@@ -149,6 +196,10 @@ void processFile(FILE* file)
         else if(strcmp(first, "not") == 0) // not
         {
             not(file);
+        }
+        else if(strcmp(first, "eq") == 0) // eq
+        {
+            eq(file, boolNum);
         }
     }
 }
