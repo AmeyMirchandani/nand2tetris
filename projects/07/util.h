@@ -163,6 +163,104 @@ void eq(FILE* file, int* boolNum)
     (*boolNum)++; //increment boolNum
 }
 
+void gt(FILE* file, int* boolNum)
+{
+    //subtract last 2 nums on stack
+    sub(file);
+
+    //copy top of stack to D
+    decSP(file);
+    A_toStackLoc(file);
+    fputs("D=M\n", file);
+
+    //write JEQ instruction -- STACK STILL DECREMENTED
+    char instruction[50];
+
+    //@BOOL_boolNum
+    sprintf(instruction, "@BOOL_%d\n", boolNum);
+    fputs(instruction, file);
+
+    //JEQ
+    fputs("D;JGT\n", file);
+
+    //put 0 on stack
+    A_toStackLoc(file);
+    fputs("M=0\n", file);
+
+    //@ENDBOOL_boolNum
+    sprintf(instruction, "@ENDBOOL_%d\n", boolNum);
+    fputs(instruction, file);
+
+    //Jump to end of sequence
+    fputs("0;JMP\n", file);
+
+    //(BOOL_boolNum)
+    sprintf(instruction, "(BOOL_%d)\n", boolNum);
+    fputs(instruction, file);
+
+    //put -1 on stack
+    A_toStackLoc(file);
+    fputs("M=-1\n", file);
+
+    //(ENDBOOL_boolNum)
+    sprintf(instruction, "(ENDBOOL_%d)\n", boolNum);
+    fputs(instruction, file);
+
+    //inc sp
+    incSP(file);
+
+    (*boolNum)++; //increment boolNum
+}
+
+void lt(FILE* file, int* boolNum)
+{
+    //subtract last 2 nums on stack
+    sub(file);
+
+    //copy top of stack to D
+    decSP(file);
+    A_toStackLoc(file);
+    fputs("D=M\n", file);
+
+    //write JEQ instruction -- STACK STILL DECREMENTED
+    char instruction[50];
+
+    //@BOOL_boolNum
+    sprintf(instruction, "@BOOL_%d\n", boolNum);
+    fputs(instruction, file);
+
+    //JEQ
+    fputs("D;JLT\n", file);
+
+    //put 0 on stack
+    A_toStackLoc(file);
+    fputs("M=0\n", file);
+
+    //@ENDBOOL_boolNum
+    sprintf(instruction, "@ENDBOOL_%d\n", boolNum);
+    fputs(instruction, file);
+
+    //Jump to end of sequence
+    fputs("0;JMP\n", file);
+
+    //(BOOL_boolNum)
+    sprintf(instruction, "(BOOL_%d)\n", boolNum);
+    fputs(instruction, file);
+
+    //put -1 on stack
+    A_toStackLoc(file);
+    fputs("M=-1\n", file);
+
+    //(ENDBOOL_boolNum)
+    sprintf(instruction, "(ENDBOOL_%d)\n", boolNum);
+    fputs(instruction, file);
+
+    //inc sp
+    incSP(file);
+
+    (*boolNum)++; //increment boolNum
+}
+
 void processFile(FILE* file, int* boolNum)
 {
     char line[100]; //line to read in input
@@ -200,6 +298,14 @@ void processFile(FILE* file, int* boolNum)
         else if(strcmp(first, "eq") == 0) // eq
         {
             eq(file, boolNum);
+        }
+        else if(strcmp(first, "gt") == 0) // eq
+        {
+            gt(file, boolNum);
+        }
+        else if(strcmp(first, "lt") == 0) // eq
+        {
+            lt(file, boolNum);
         }
     }
 }
