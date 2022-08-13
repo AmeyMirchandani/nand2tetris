@@ -299,11 +299,11 @@ void processFile(FILE* file, int* boolNum)
         {
             eq(file, boolNum);
         }
-        else if(strcmp(first, "gt") == 0) // eq
+        else if(strcmp(first, "gt") == 0) // gt
         {
             gt(file, boolNum);
         }
-        else if(strcmp(first, "lt") == 0) // eq
+        else if(strcmp(first, "lt") == 0) // lt
         {
             lt(file, boolNum);
         }
