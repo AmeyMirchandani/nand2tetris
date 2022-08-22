@@ -77,7 +77,7 @@ int main(int argc, char** argv)
             exit(1);
         }
         //PROCESS FILE
-        //processFile(inputFile, &boolNum);
+        processFile(inputFile, outputFile, &boolNum);
 
         if(!isPath) //finish after first file if it is not a directory
             done = true;

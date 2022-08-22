@@ -15,12 +15,12 @@ char* getDirName(char* directory) //modifies input string and returns pointer to
 
 void incSP(FILE* file)
 {
-    fputs("@SP\nM=M-1\n", file);
+    fputs("@SP\nM=M+1\n", file);
 }
 
 void decSP(FILE* file)
 {
-    fputs("@SP\nM=M+1\n", file);
+    fputs("@SP\nM=M-1\n", file);
 }
 
 void A_toStackLoc(FILE* file)
@@ -128,7 +128,7 @@ void eq(FILE* file, int* boolNum)
     char instruction[50];
 
     //@BOOL_boolNum
-    sprintf(instruction, "@BOOL_%d\n", boolNum);
+    sprintf(instruction, "@BOOL_%d\n", *boolNum);
     fputs(instruction, file);
 
     //JEQ
@@ -139,14 +139,14 @@ void eq(FILE* file, int* boolNum)
     fputs("M=0\n", file);
 
     //@ENDBOOL_boolNum
-    sprintf(instruction, "@ENDBOOL_%d\n", boolNum);
+    sprintf(instruction, "@ENDBOOL_%d\n", *boolNum);
     fputs(instruction, file);
 
     //Jump to end of sequence
     fputs("0;JMP\n", file);
 
     //(BOOL_boolNum)
-    sprintf(instruction, "(BOOL_%d)\n", boolNum);
+    sprintf(instruction, "(BOOL_%d)\n", *boolNum);
     fputs(instruction, file);
 
     //put -1 on stack
@@ -154,7 +154,7 @@ void eq(FILE* file, int* boolNum)
     fputs("M=-1\n", file);
 
     //(ENDBOOL_boolNum)
-    sprintf(instruction, "(ENDBOOL_%d)\n", boolNum);
+    sprintf(instruction, "(ENDBOOL_%d)\n", *boolNum);
     fputs(instruction, file);
 
     //inc sp
@@ -177,7 +177,7 @@ void gt(FILE* file, int* boolNum)
     char instruction[50];
 
     //@BOOL_boolNum
-    sprintf(instruction, "@BOOL_%d\n", boolNum);
+    sprintf(instruction, "@BOOL_%d\n", *boolNum);
     fputs(instruction, file);
 
     //JEQ
@@ -188,14 +188,14 @@ void gt(FILE* file, int* boolNum)
     fputs("M=0\n", file);
 
     //@ENDBOOL_boolNum
-    sprintf(instruction, "@ENDBOOL_%d\n", boolNum);
+    sprintf(instruction, "@ENDBOOL_%d\n", *boolNum);
     fputs(instruction, file);
 
     //Jump to end of sequence
     fputs("0;JMP\n", file);
 
     //(BOOL_boolNum)
-    sprintf(instruction, "(BOOL_%d)\n", boolNum);
+    sprintf(instruction, "(BOOL_%d)\n", *boolNum);
     fputs(instruction, file);
 
     //put -1 on stack
@@ -203,7 +203,7 @@ void gt(FILE* file, int* boolNum)
     fputs("M=-1\n", file);
 
     //(ENDBOOL_boolNum)
-    sprintf(instruction, "(ENDBOOL_%d)\n", boolNum);
+    sprintf(instruction, "(ENDBOOL_%d)\n", *boolNum);
     fputs(instruction, file);
 
     //inc sp
@@ -226,7 +226,7 @@ void lt(FILE* file, int* boolNum)
     char instruction[50];
 
     //@BOOL_boolNum
-    sprintf(instruction, "@BOOL_%d\n", boolNum);
+    sprintf(instruction, "@BOOL_%d\n", *boolNum);
     fputs(instruction, file);
 
     //JEQ
@@ -237,14 +237,14 @@ void lt(FILE* file, int* boolNum)
     fputs("M=0\n", file);
 
     //@ENDBOOL_boolNum
-    sprintf(instruction, "@ENDBOOL_%d\n", boolNum);
+    sprintf(instruction, "@ENDBOOL_%d\n", *boolNum);
     fputs(instruction, file);
 
     //Jump to end of sequence
     fputs("0;JMP\n", file);
 
     //(BOOL_boolNum)
-    sprintf(instruction, "(BOOL_%d)\n", boolNum);
+    sprintf(instruction, "(BOOL_%d)\n", *boolNum);
     fputs(instruction, file);
 
     //put -1 on stack
@@ -252,7 +252,7 @@ void lt(FILE* file, int* boolNum)
     fputs("M=-1\n", file);
 
     //(ENDBOOL_boolNum)
-    sprintf(instruction, "(ENDBOOL_%d)\n", boolNum);
+    sprintf(instruction, "(ENDBOOL_%d)\n", *boolNum);
     fputs(instruction, file);
 
     //inc sp
@@ -265,11 +265,12 @@ void push(FILE* file, char* pushType)
 {
     char* third = strtok(NULL, " /"); //third word
 
-    if(strcmp(pushType, "constant")) //push constant [num]
+    if(strcmp(pushType, "constant") == 0) //push constant [num]
     {
         int num = atoi(third); //number to push
         char line[50];
         sprintf(line, "@%d\n", num); //put the number to be pushed into the A register
+        fputs(line, file);
 
         fputs("D=A\n", file); //copy number to be pushed from the A register to the D register
 
@@ -280,7 +281,7 @@ void push(FILE* file, char* pushType)
     }
 }
 
-void processFile(FILE* file, int* boolNum)
+void processFile(FILE* file, FILE* outputFile, int* boolNum)
 {
     char line[100]; //line to read in input
 
@@ -289,47 +290,48 @@ void processFile(FILE* file, int* boolNum)
         if(line[0] == '/' || line[0] == '\n') //if first char is a / or a newline(\n), skip line
             continue;
 
-        char* first = strtok(line, " /"); //first word
+        char* first = strtok(line, " /\n"); //first word
+        
         if(strcmp(first, "add") == 0) // add
         {
-            add(file);
+            add(outputFile);
         }
         else if(strcmp(first, "sub") == 0) // subtract
         {
-            sub(file);
+            sub(outputFile);
         }
         else if(strcmp(first, "neg") == 0) // negative
         {
-            neg(file);
+            neg(outputFile);
         }
         else if(strcmp(first, "and") == 0) // and
         {
-            and(file);
+            and(outputFile);
         }
         else if(strcmp(first, "or") == 0) // or
         {
-            or(file);
+            or(outputFile);
         }
         else if(strcmp(first, "not") == 0) // not
         {
-            not(file);
+            not(outputFile);
         }
         else if(strcmp(first, "eq") == 0) // eq
         {
-            eq(file, boolNum);
+            eq(outputFile, boolNum);
         }
         else if(strcmp(first, "gt") == 0) // gt
         {
-            gt(file, boolNum);
+            gt(outputFile, boolNum);
         }
         else if(strcmp(first, "lt") == 0) // lt
         {
-            lt(file, boolNum);
+            lt(outputFile, boolNum);
         }
         else if(strcmp(first, "push") == 0) //ALL PUSH COMMANDS
         {
             char* second = strtok(NULL, " /"); //second word
-            push(file, second);
+            push(outputFile, second);
         }
     }
 }
