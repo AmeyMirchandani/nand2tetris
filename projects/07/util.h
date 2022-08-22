@@ -261,6 +261,25 @@ void lt(FILE* file, int* boolNum)
     (*boolNum)++; //increment boolNum
 }
 
+void push(FILE* file, char* pushType)
+{
+    char* third = strtok(NULL, " /"); //third word
+
+    if(strcmp(pushType, "constant")) //push constant [num]
+    {
+        int num = atoi(third); //number to push
+        char line[50];
+        sprintf(line, "@%d\n", num); //put the number to be pushed into the A register
+
+        fputs("D=A\n", file); //copy number to be pushed from the A register to the D register
+
+        A_toStackLoc(file);
+        fputs("M=D\n", file); //copy number to be pushed from the D register onto the stack location in the HEAP
+
+        incSP(file); //inc sp
+    }
+}
+
 void processFile(FILE* file, int* boolNum)
 {
     char line[100]; //line to read in input
@@ -306,6 +325,11 @@ void processFile(FILE* file, int* boolNum)
         else if(strcmp(first, "lt") == 0) // lt
         {
             lt(file, boolNum);
+        }
+        else if(strcmp(first, "push") == 0) //ALL PUSH COMMANDS
+        {
+            char* second = strtok(NULL, " /"); //second word
+            push(file, second);
         }
     }
 }
