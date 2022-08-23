@@ -279,6 +279,10 @@ void push(FILE* file, char* pushType)
 
         incSP(file); //inc sp
     }
+    else if(strcmp(pushType, "local") == 0) //push local [num]
+    {
+        
+    }
 }
 
 void processFile(FILE* file, FILE* outputFile, int* boolNum)
