@@ -77,7 +77,11 @@ int main(int argc, char** argv)
             exit(1);
         }
         //PROCESS FILE
-        processFile(inputFile, outputFile, &boolNum);
+        char noExtensionFileName[60];
+        strcpy(noExtensionFileName, filename);
+        char* newFileName = strtok(noExtensionFileName, ".");
+
+        processFile(inputFile, outputFile, newFileName, &boolNum);
 
         if(!isPath) //finish after first file if it is not a directory
             done = true;
