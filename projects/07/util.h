@@ -263,7 +263,7 @@ void lt(FILE* file, int* boolNum)
 
 void push(FILE* file, char* pushType)
 {
-    char* third = strtok(NULL, " /"); //third word
+    char* third = strtok(NULL, " /\n"); //third word
 
     if(strcmp(pushType, "constant") == 0) //push constant [num]
     {
@@ -281,7 +281,24 @@ void push(FILE* file, char* pushType)
     }
     else if(strcmp(pushType, "local") == 0) //push local [num]
     {
-        
+        int offset = atoi(third); //offset
+        char line[50];
+        sprintf(line, "@%d\n", offset); //put the offset into the A register
+        fputs(line, file);
+
+        fputs("D=A\n", file); //copy offset from the A register to the D register
+
+        fputs("@LCL\nA=M\n", file); //put address of local segment in heap into A register
+
+        fputs("A=D+A\n", file); //put address to be pushed from into A register, calculated using offset
+
+        fputs("D=M\n", file); //get value of local segment in heap, including the offset, then put it into D register
+
+        A_toStackLoc(file); //set A to location in heap of stack
+
+        fputs("M=D\n", file); //set top of stack to value of local including offset (which is in D register)
+
+        incSP(file);
     }
 }
 
