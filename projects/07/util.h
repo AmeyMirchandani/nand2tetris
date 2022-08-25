@@ -54,7 +54,7 @@ void sub(FILE* file)
     //get 2nd num and put subtracted num onto stack
     decSP(file);
     A_toStackLoc(file);
-    fputs("M=M-D", file);
+    fputs("M=M-D\n", file);
 
     //inc sp
     incSP(file);
