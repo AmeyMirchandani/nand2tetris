@@ -3,7 +3,7 @@
 ## Assembler
 ---
 ### No Symbol Version
-On this one, it took me a bit to figure out how to properly use fgets; once I actually did figure it out, it became much easier to read from the input ".asm" file.\
+On this one, it took me a bit to figure out how to properly use fgets; once I actually did figure it out, it became much easier to read from the input ".asm" file.
  >Some notes:\
  -strtok: if " " space delimiter is chosen as part of delimiters, it will not automatically remove it from the front of strings, it does however remove them from the end of strings, replacing any amount with the NUL character "\0". The man page is either weirdly worded or flat out wrong as it says it removes the delimiters at the front of the string. (Still have to test with non space delimiters).\
  -Because of the above problem, it was necessary to write a function that when passed a string, returns a char pointer pointing to the first non space character (skips the spaces before the string like strtok is supposed to).\
